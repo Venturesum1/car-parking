@@ -1,0 +1,39 @@
+<header class="header">
+    <div class="header-container">
+        <h1 href="/dashboard" >Dashboard</h1>
+        <nav class="nav-links">
+
+            <div class="right-side">
+                <a href="/logout" class="logout-link">Logout</a>
+                
+                <div class="profile-dropdown">
+                    <img src="/profile.jpg" alt="Profile" class="profile-image" onclick="toggleDropdown()" />
+                    <div id="dropdown-content" class="dropdown-content">
+                        <p>Email: <%= email %></p>
+                    </div>
+                </div>
+            </div>
+            
+        </nav>
+    </div>
+</header>
+
+<script>
+    function toggleDropdown() {
+        const dropdown = document.getElementById('dropdown-content');
+        dropdown.classList.toggle('show');
+    }
+
+    // Close the dropdown if clicked outside
+    window.onclick = function(event) {
+        if (!event.target.matches('.profile-image')) {
+            const dropdowns = document.getElementsByClassName('dropdown-content');
+            for (let i = 0; i < dropdowns.length; i++) {
+                const openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
+            }
+        }
+    }
+</script>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/dashboard.css">
+</head>
+<body>
+    <%- include('partials/header', { email: email }) %>
+
+    <div class="main-content">
+
+
+        <div class="header-title">
+            <h1>Top Car Brands in India (2024)</h1>
+        </div>
+    
+        <div class="main-content">
+        <button class="add-car-button" onclick="document.getElementById('addCarForm').style.display='block'">Add Car</button>
+
+        <!-- Add Car Form (Initially hidden) -->
+        <div id="addCarForm" class="form-container" style="display: none;">
+            <form action="/addCar" method="POST" enctype="multipart/form-data">
+                <label for="name">Car Name:</label>
+                <input type="text" id="name" name="name" required>
+                
+                <label for="model">Car Model:</label>
+                <input type="text" id="model" name="model" required>
+                
+                <label for="price">Price:</label>
+                <input type="number" id="price" name="price" required>
+                
+                <label for="image">Image:</label>
+                <input type="file" id="image" name="image" required>
+                
+                <!-- Back Button -->
+                <a href="/dashboard" class="back-button">Back to Dashboard</a>
+                
+                <button type="submit" class="submit-button">Add Car</button>
+            </form>
+        </div>
+        
+
+        <!-- Car List -->
+        <div class="car-list">
+            <% cars.forEach(car => { %>
+                <div class="car-card">
+                    <img src="<%= car.image %>" alt="Car Image" class="car-image" onclick="openModal('<%= car.image %>')">
+                    <div class="car-details">
+                        <h4><%= car.name %> (<%= car.model %>)</h4>
+                        <p>Price: $<%= car.price %></p>
+                        <div class="car-actions">
+                            <a href="/editCar/<%= car._id %>" class="action-button edit-button">&#9998; Edit</a>
+                            <a href="/deleteCar/<%= car._id %>" class="action-button delete-button">&#10060; Delete</a>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+        
+        <!-- Image Modal -->
+        <div id="imageModal" class="image-modal">
+            <span class="close-button" onclick="closeModal()">&times;</span>
+            <img id="modalImage" class="modal-content">
+        </div>
+    </div>
+
+
+    <!-- Edit Car Modal (Initially hidden) -->
+    <div id="editCarModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeEditCarModal()">&times;</span>
+            <form id="editCarForm" method="POST" enctype="multipart/form-data">
+                <label for="editName">Car Name:</label>
+                <input type="text" id="editName" name="name" required>
+                
+                <label for="editModel">Car Model:</label>
+                <input type="text" id="editModel" name="model" required>
+                
+                <label for="editPrice">Price:</label>
+                <input type="number" id="editPrice" name="price" required>
+                
+                <label for="editImage">Image:</label>
+                <input type="file" id="editImage" name="image">
+                
+                <button type="submit" class="submit-button">Update Car</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript to handle Edit Car Modal
+        function openEditCarModal(carId, name, model, price, imageUrl) {
+            document.getElementById('editCarModal').style.display = 'block';
+            document.getElementById('editCarForm').action = '/editCar/' + carId;
+            document.getElementById('editName').value = name;
+            document.getElementById('editModel').value = model;
+            document.getElementById('editPrice').value = price;
+            if (imageUrl) {
+                document.getElementById('editImage').value = imageUrl;
+            }
+        }
+
+        function closeEditCarModal() {
+            document.getElementById('editCarModal').style.display = 'none';
+        }
+        function openModal(imageSrc) {
+        const modal = document.getElementById("imageModal");
+        const modalImg = document.getElementById("modalImage");
+        modal.style.display = "flex";
+        modalImg.src = imageSrc;
+    }
+
+    function closeModal() {
+        document.getElementById("imageModal").style.display = "none";
+    }
+    </script>
+</body>
+</html>
